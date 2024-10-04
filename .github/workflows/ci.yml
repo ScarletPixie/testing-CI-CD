@@ -1,0 +1,36 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs_on:  ubuntu-latest
+
+    steps:
+      - name: checkout code
+      uses: actions/checkout@v2
+
+      - name: install dependencies
+      run: sudo apt install -y valgrind gcc make
+
+      - name: compile library
+      run: make all
+
+      - name: compile unit tests
+      run: make test
+
+      - name: compile memory leak tests
+      run: make test_leak
+
+      - name: run unit tests
+      run: ./test_libsay
+
+      - name: run valgrind test program
+      run: ./leak_test
+
